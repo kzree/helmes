@@ -37,5 +37,5 @@ Backend test run (requires docker for test containers):
 
 ```bash
 cd ./backend
-./gradlew integrationTests
+./gradlew integrationTest
 ```

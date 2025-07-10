@@ -44,6 +44,23 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+task integrationTest(type: Test) {
+    maxHeapSize = "3G"
+    useJUnitPlatform()
+    description = "Execute integration tests."
+    group = "verification"
+    include "**/*IT*"
+    testLogging {
+        events "PASSED", "SKIPPED", "FAILED", "STANDARD_ERROR", "STANDARD_OUT"
+        exceptionFormat = "FULL"
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+    systemProperty("spring.profiles.active", "testdev") 
+    reports.html.required = false
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

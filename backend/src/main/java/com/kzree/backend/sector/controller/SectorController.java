@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/sector")
+@RequestMapping("/api/sectors")
 @RequiredArgsConstructor
 public class SectorController {
     private final SectorService sectorService;
