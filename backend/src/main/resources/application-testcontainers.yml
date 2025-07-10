@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:latest///my-db
+    username: user
+    password: user
+    hikari:
+      pool-name: PostgresHikari
+      auto-commit: false

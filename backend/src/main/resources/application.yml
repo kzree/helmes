@@ -1,0 +1,26 @@
+server:
+  port: 4000
+
+spring:
+  application:
+    name: my-api
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+  devtools:
+    livereload:
+      enabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:6001/my-db
+    username: psuser
+    password: pspass
+    hikari:
+      pool-name: PostgresHikari
+      auto-commit: false
+  flyway:
+    locations: classpath:db/migration
+    url: jdbc:postgresql://localhost:6001/my-db
+    user: psuser
+    password: pspass
