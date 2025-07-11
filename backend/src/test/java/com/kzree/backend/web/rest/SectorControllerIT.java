@@ -41,9 +41,14 @@ public class SectorControllerIT {
     public void getAllSectors() throws Exception {
         var testName = "Test Sector";
 
-        var filter = new Sector();
-        filter.setName(testName);
-        sectorRepository.saveAndFlush(filter);
+        var sector1 = new Sector();
+        sector1.setName(testName);
+        sectorRepository.saveAndFlush(sector1);
+
+        var sector2 = new Sector();
+        sector2.setName("Another Sector");
+        sector2.setParentSector(sector1);
+        sectorRepository.saveAndFlush(sector2);
 
         mockMvc
                 .perform(get(ENTITY_API_URL))

@@ -1,5 +1,6 @@
 package com.kzree.backend.sector.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +10,5 @@ import com.kzree.backend.sector.domain.Sector;
 
 @Repository
 public interface SectorRepository extends JpaRepository<Sector, UUID> {
+    List<Sector> findByParentSectorIsNull();
 }

@@ -22,7 +22,7 @@ public class SectorService {
     @Transactional(readOnly = true)
     public List<SectorDTO> getAllSectors() {
         log.info("Fetching all sectors");
-        var sectors = sectorRepository.findAll();
+        var sectors = sectorRepository.findByParentSectorIsNull();
         return sectorMapper.toDto(sectors);
     }
 }

@@ -9,6 +9,13 @@ import { InputService, Sector } from './input-service';
 import { CommonModule } from '@angular/common';
 import { ComponentsModule } from '../components/components-module';
 
+const PADDING_PER_LEVEL_IN_PX = 16;
+
+interface SectorWithLevel extends Sector {
+  nestingLevel: number;
+  padding: number;
+}
+
 @Component({
   selector: 'app-input-form',
   imports: [CommonModule, ReactiveFormsModule, ComponentsModule],
@@ -17,12 +24,12 @@ import { ComponentsModule } from '../components/components-module';
 })
 export class InputForm implements OnInit {
   private inputService = inject(InputService);
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
 
-  sectorOptions = signal<Sector[]>([]);
+  sectorOptions = signal<SectorWithLevel[]>([]);
   loading = signal(true);
 
-  inputForm: FormGroup = this.fb.group({
+  inputForm: FormGroup = this.formBuilder.group({
     id: [null],
     name: ['', [Validators.required]],
     sectors: [[], [Validators.required]],
@@ -41,10 +48,26 @@ export class InputForm implements OnInit {
     return this.inputForm.get('termsAccepted');
   }
 
+  private flattenSectors(sectors: Sector[], level = 0) {
+    const flattened: SectorWithLevel[] = [];
+    sectors.forEach((sector) => {
+      flattened.push({
+        ...sector,
+        nestingLevel: level,
+        padding: level * PADDING_PER_LEVEL_IN_PX,
+      });
+      if (sector.subSectors && sector.subSectors.length > 0) {
+        flattened.push(...this.flattenSectors(sector.subSectors, level + 1));
+      }
+    });
+
+    return flattened;
+  }
+
   ngOnInit() {
     this.inputService.getSectors().subscribe({
       next: (data) => {
-        this.sectorOptions.set(data);
+        this.sectorOptions.set(this.flattenSectors(data));
         this.loading.set(false);
       },
       error: (error) => {

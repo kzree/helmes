@@ -10,6 +10,7 @@ export interface Entity {
 
 export interface Sector extends Entity {
   name: string;
+  subSectors: Sector[];
 }
 
 export interface NewInput {
