@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 export interface Entity {
   id: string;
@@ -23,7 +24,7 @@ export interface Input extends Entity, NewInput {}
   providedIn: 'root',
 })
 export class InputService {
-  private apiUrl = 'http://localhost:4000/api'; // TODO: get this value from env variables
+  private apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
 
   getSectors() {
