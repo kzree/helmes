@@ -7,10 +7,11 @@ import {
 } from '@angular/forms';
 import { InputService, Sector } from './input-service';
 import { CommonModule } from '@angular/common';
+import { ComponentsModule } from '../components/components-module';
 
 @Component({
   selector: 'app-input-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ComponentsModule],
   templateUrl: './input-form.html',
   styleUrl: './input-form.css',
 })
