@@ -13,6 +13,8 @@ import lombok.Setter;
 @Setter
 public class InputDTO extends EntityDTO implements Serializable {
     private String name;
+
     private Boolean termsAccepted;
+
     private Set<SectorDTO> sectors;
 }

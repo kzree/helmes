@@ -1,7 +1,6 @@
 package com.kzree.backend.sector.dto;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 
 import com.kzree.backend.common.dto.EntityDTO;
 
@@ -12,6 +11,4 @@ import lombok.Setter;
 @Setter
 public class SectorDTO extends EntityDTO implements Serializable {
     private String name;
-    private ZonedDateTime createdAt;
-    private ZonedDateTime updatedAt;
 }

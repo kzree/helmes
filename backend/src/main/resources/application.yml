@@ -1,6 +1,11 @@
 server:
   port: 4000
 
+logging:
+  level:
+    ROOT: INFO
+    com.kzree.backend: DEBUG
+
 spring:
   application:
     name: my-api
