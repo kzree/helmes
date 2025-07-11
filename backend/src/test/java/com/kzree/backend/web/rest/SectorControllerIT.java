@@ -38,8 +38,8 @@ public class SectorControllerIT {
 
     @Test
     @Transactional
-    public void getAllFilters() throws Exception {
-        var testName = "Test Filter";
+    public void getAllSectors() throws Exception {
+        var testName = "Test Sector";
 
         var filter = new Sector();
         filter.setName(testName);
