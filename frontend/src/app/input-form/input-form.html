@@ -4,7 +4,7 @@
   class="flex flex-col gap-8 w-[400px]"
 >
   <div class="form-group">
-    <label class="font-semibold" for="name">Name</label>
+    <label class="font-semibold required pb-2" for="name">Name</label>
     <input
       type="text"
       id="name"
@@ -16,7 +16,7 @@
   </div>
 
   <div class="form-group">
-    <label class="font-semibold">
+    <label class="font-semibold required pb-2">
       <input
         type="checkbox"
         id="termsAccepted"
@@ -30,7 +30,7 @@
     ></app-error-text>
   </div>
   <div class="form-group">
-    <label class="font-semibold" for="sectors">Sectors</label>
+    <label class="font-semibold required pb-2" for="sectors">Sectors</label>
     <select multiple size="10" id="sectors" formControlName="sectors">
       <option *ngFor="let sector of sectorOptions()" [value]="sector">
         {{ sector.name }}
