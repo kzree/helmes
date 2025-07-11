@@ -87,6 +87,46 @@ public class InputControllerIT {
 
     @Test
     @Transactional
+    public void saveNewInputWithoutName() throws Exception {
+        var sector = new Sector();
+        sector.setName("Test Sector");
+        var sectorDTO = sectorMapper.toDto(sectorRepository.saveAndFlush(sector));
+
+        var input = new InputDTO();
+        input.setName("");
+        input.setTermsAccepted(true);
+        input.setSectors(Set.of(sectorDTO));
+
+        mockMvc
+                .perform(post(ENTITY_API_URL)
+                        .contentType("application/json")
+                        .content(Serialization.serializeJSONFromObject(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(ErrorCodes.VALIDATION_ERROR));
+    }
+
+    @Test
+    @Transactional
+    public void saveNewInputWithTermsNotAgreed() throws Exception {
+        var sector = new Sector();
+        sector.setName("Test Sector");
+        var sectorDTO = sectorMapper.toDto(sectorRepository.saveAndFlush(sector));
+
+        var input = new InputDTO();
+        input.setName("Test Input");
+        input.setTermsAccepted(false);
+        input.setSectors(Set.of(sectorDTO));
+
+        mockMvc
+                .perform(post(ENTITY_API_URL)
+                        .contentType("application/json")
+                        .content(Serialization.serializeJSONFromObject(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(ErrorCodes.VALIDATION_ERROR));
+    }
+
+    @Test
+    @Transactional
     public void saveNewInput() throws Exception {
         var testName = "New Input";
 
@@ -142,5 +182,4 @@ public class InputControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(testName));
     }
-
 }
