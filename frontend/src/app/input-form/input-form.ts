@@ -50,6 +50,23 @@ export class InputForm implements OnInit {
         this.loading.set(false);
       },
     });
+
+    this.inputService.getInputs().subscribe({
+      next: (data) => {
+        if (!data.length) {
+          return;
+        }
+        const { name, termsAccepted, sectors } = data[0];
+        this.inputForm.patchValue({
+          name,
+          termsAccepted,
+          sectors: sectors.map((sector) => sector.id),
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching inputs:', error);
+      },
+    });
   }
 
   private markAllFieldsAsTouched() {
@@ -65,6 +82,14 @@ export class InputForm implements OnInit {
       return;
     }
 
-    console.log('Form submitted:', this.inputForm.value);
+    this.inputService.saveNewInput(this.inputForm.value).subscribe({
+      next: (res) => {
+        console.log('Input saved successfully:', res);
+        this.inputForm.reset();
+      },
+      error: (err) => {
+        console.error('Error saving input:', err);
+      },
+    });
   }
 }
