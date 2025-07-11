@@ -48,6 +48,12 @@ export class InputForm implements OnInit {
     return this.inputForm.get('termsAccepted');
   }
 
+  isSectorSelected(sector: SectorWithLevel): boolean {
+    const selectedSectors: SectorWithLevel[] =
+      this.inputForm.get('sectors')?.value || [];
+    return selectedSectors.some((selected) => selected.id === sector.id);
+  }
+
   private flattenSectors(sectors: Sector[], level = 0) {
     const flattened: SectorWithLevel[] = [];
     sectors.forEach((sector) => {
@@ -122,6 +128,7 @@ export class InputForm implements OnInit {
       });
       return;
     }
+
     this.inputService.saveNewInput(this.inputForm.value).subscribe({
       next: (res) => this.patchFormWithData(res),
       error: (err) => {

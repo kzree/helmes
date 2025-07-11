@@ -1,7 +1,7 @@
 <form
   [formGroup]="inputForm"
   (ngSubmit)="onSubmit()"
-  class="flex flex-col gap-8 w-[400px]"
+  class="flex flex-col gap-8 w-[400px] py-8"
 >
   <div class="form-group">
     <label class="font-semibold required pb-2" for="name">Name</label>
@@ -38,6 +38,7 @@
         [style.padding-left.px]="sector.padding"
       >
         {{ sector.name }}
+        <span class="font-bold" *ngIf="isSectorSelected(sector)"> ✕</span>
       </option>
     </select>
     <app-error-text [control]="sectors" fieldName="sectors"></app-error-text>
