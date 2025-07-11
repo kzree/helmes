@@ -5,11 +5,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputService, Sector } from './input-service';
+import { Input, InputService, Sector } from './input-service';
 import { CommonModule } from '@angular/common';
 import { ComponentsModule } from '../components/components-module';
-
-const PADDING_PER_LEVEL_IN_PX = 16;
 
 interface SectorWithLevel extends Sector {
   nestingLevel: number;
@@ -23,6 +21,8 @@ interface SectorWithLevel extends Sector {
   styleUrl: './input-form.css',
 })
 export class InputForm implements OnInit {
+  private readonly PADDING_PER_LEVEL_IN_PX = 16;
+
   private inputService = inject(InputService);
   private formBuilder = inject(FormBuilder);
 
@@ -54,7 +54,7 @@ export class InputForm implements OnInit {
       flattened.push({
         ...sector,
         nestingLevel: level,
-        padding: level * PADDING_PER_LEVEL_IN_PX,
+        padding: level * this.PADDING_PER_LEVEL_IN_PX,
       });
       if (sector.subSectors && sector.subSectors.length > 0) {
         flattened.push(...this.flattenSectors(sector.subSectors, level + 1));
@@ -81,13 +81,7 @@ export class InputForm implements OnInit {
         if (!data.length) {
           return;
         }
-        const { id, name, termsAccepted, sectors } = data[0];
-        this.inputForm.patchValue({
-          id,
-          name,
-          termsAccepted,
-          sectors,
-        });
+        this.patchFormWithData(data[0]);
       },
       error: (error) => {
         console.error('Error fetching inputs:', error);
@@ -101,10 +95,19 @@ export class InputForm implements OnInit {
     });
   }
 
+  private patchFormWithData(data: Input) {
+    const { id, name, termsAccepted, sectors } = data;
+    this.inputForm.patchValue({
+      id,
+      name,
+      termsAccepted,
+      sectors,
+    });
+  }
+
   onSubmit() {
-    this.markAllFieldsAsTouched();
     if (!this.inputForm.valid) {
-      console.error('Form is invalid:', this.inputForm.errors);
+      this.markAllFieldsAsTouched();
       return;
     }
 
@@ -112,16 +115,7 @@ export class InputForm implements OnInit {
 
     if (isExistingInput) {
       this.inputService.updateInput(this.inputForm.value).subscribe({
-        next: (res) => {
-          console.log('Input updated successfully:', res);
-          const { id, name, termsAccepted, sectors } = res;
-          this.inputForm.patchValue({
-            id,
-            name,
-            termsAccepted,
-            sectors,
-          });
-        },
+        next: (res) => this.patchFormWithData(res),
         error: (err) => {
           console.error('Error updating input:', err);
         },
@@ -129,16 +123,7 @@ export class InputForm implements OnInit {
       return;
     }
     this.inputService.saveNewInput(this.inputForm.value).subscribe({
-      next: (res) => {
-        console.log('Input saved successfully:', res);
-        const { id, name, termsAccepted, sectors } = res;
-        this.inputForm.patchValue({
-          id,
-          name,
-          termsAccepted,
-          sectors,
-        });
-      },
+      next: (res) => this.patchFormWithData(res),
       error: (err) => {
         console.error('Error saving input:', err);
       },
