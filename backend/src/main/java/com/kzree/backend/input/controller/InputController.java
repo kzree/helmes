@@ -1,9 +1,11 @@
 package com.kzree.backend.input.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,9 +40,9 @@ public class InputController {
         return ResponseEntity.ok(savedInput);
     }
 
-    @PutMapping
-    public ResponseEntity<InputDTO> updateInput(@Valid @RequestBody InputDTO inputDTO) {
-        log.info("Request to update input with ID: {}", inputDTO.getId());
+    @PutMapping("/{id}")
+    public ResponseEntity<InputDTO> updateInput(@Valid @RequestBody InputDTO inputDTO, @PathVariable UUID id) {
+        log.info("Request to update input with ID: {}", id);
         var updatedInput = inputService.update(inputDTO);
         return ResponseEntity.ok(updatedInput);
     }

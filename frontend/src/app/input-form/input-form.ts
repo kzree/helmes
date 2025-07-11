@@ -22,6 +22,7 @@ export class InputForm implements OnInit {
   loading = signal(true);
 
   inputForm: FormGroup = this.fb.group({
+    id: [null],
     name: ['', [Validators.required]],
     sectors: [[], [Validators.required]],
     termsAccepted: [false, [Validators.requiredTrue]],
@@ -56,11 +57,12 @@ export class InputForm implements OnInit {
         if (!data.length) {
           return;
         }
-        const { name, termsAccepted, sectors } = data[0];
+        const { id, name, termsAccepted, sectors } = data[0];
         this.inputForm.patchValue({
+          id,
           name,
           termsAccepted,
-          sectors: sectors.map((sector) => sector.id),
+          sectors,
         });
       },
       error: (error) => {
@@ -82,10 +84,36 @@ export class InputForm implements OnInit {
       return;
     }
 
+    const isExistingInput = !!this.inputForm.value.id;
+
+    if (isExistingInput) {
+      this.inputService.updateInput(this.inputForm.value).subscribe({
+        next: (res) => {
+          console.log('Input updated successfully:', res);
+          const { id, name, termsAccepted, sectors } = res;
+          this.inputForm.patchValue({
+            id,
+            name,
+            termsAccepted,
+            sectors,
+          });
+        },
+        error: (err) => {
+          console.error('Error updating input:', err);
+        },
+      });
+      return;
+    }
     this.inputService.saveNewInput(this.inputForm.value).subscribe({
       next: (res) => {
         console.log('Input saved successfully:', res);
-        this.inputForm.reset();
+        const { id, name, termsAccepted, sectors } = res;
+        this.inputForm.patchValue({
+          id,
+          name,
+          termsAccepted,
+          sectors,
+        });
       },
       error: (err) => {
         console.error('Error saving input:', err);
