@@ -8,6 +8,7 @@ import {
 import { Input, InputService, Sector } from './input-service';
 import { CommonModule } from '@angular/common';
 import { ComponentsModule } from '../components/components-module';
+import { TranslocoModule } from '@jsverse/transloco';
 
 interface SectorWithLevel extends Sector {
   nestingLevel: number;
@@ -16,7 +17,12 @@ interface SectorWithLevel extends Sector {
 
 @Component({
   selector: 'app-input-form',
-  imports: [CommonModule, ReactiveFormsModule, ComponentsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ComponentsModule,
+    TranslocoModule,
+  ],
   templateUrl: './input-form.html',
   styleUrl: './input-form.css',
 })

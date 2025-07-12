@@ -1,0 +1,15 @@
+{
+  "form": {
+    "error": {
+      "required": "Field is required"
+    },
+    "label": {
+      "name": "Name",
+      "terms": "I agree to the terms and conditions",
+      "sectors": "Sectors"
+    },
+    "button": {
+      "submit": "Submit"
+    }
+  }
+}
