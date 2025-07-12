@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,9 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ComponentsModule } from '../components/components-module';
 import { InputService } from './services/input-service';
 import { Input, SectorWithLevel } from '../../types/api';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-input-form',
@@ -25,6 +27,7 @@ import { Input, SectorWithLevel } from '../../types/api';
 export class InputForm implements OnInit {
   private inputService = inject(InputService);
   private formBuilder = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   sectorOptions = signal<SectorWithLevel[]>([]);
   loading = signal(true);
@@ -55,28 +58,26 @@ export class InputForm implements OnInit {
   }
 
   ngOnInit() {
-    this.inputService.getSectorOptions().subscribe({
-      next: (data) => {
-        this.sectorOptions.set(data);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Error fetching sectors:', error);
-        this.loading.set(false);
-      },
-    });
+    const sectors$ = this.inputService.getSectorOptions();
+    const inputs$ = this.inputService.getInputs();
 
-    this.inputService.getInputs().subscribe({
-      next: (data) => {
-        if (!data.length) {
-          return;
-        }
-        this.patchFormWithData(data[0]);
-      },
-      error: (error) => {
-        console.error('Error fetching inputs:', error);
-      },
-    });
+    forkJoin({ sectors: sectors$, inputs: inputs$ })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: ({ sectors, inputs }) => {
+          this.sectorOptions.set(sectors);
+          if (inputs.length > 0) {
+            this.patchFormWithData(inputs[0]);
+          }
+          this.loading.set(false);
+        },
+        error: (error) => this.handleError(error),
+      });
+  }
+
+  private handleError(error: unknown) {
+    console.log('Error fetching sectors or inputs:', error);
+    this.loading.set(false);
   }
 
   private markAllFieldsAsTouched() {
@@ -102,31 +103,18 @@ export class InputForm implements OnInit {
     }
 
     this.loading.set(true);
-    const isExistingInput = !!this.inputForm.value.id;
 
-    if (isExistingInput) {
-      this.inputService.updateInput(this.inputForm.value).subscribe({
-        next: (res) => {
-          this.loading.set(false);
-          return this.patchFormWithData(res);
-        },
-        error: (err) => {
-          this.loading.set(false);
-          console.error('Error updating input:', err);
-        },
-      });
-      return;
-    }
+    const formValue = this.inputForm.value;
+    const operation$ = formValue.id
+      ? this.inputService.updateInput(formValue)
+      : this.inputService.saveNewInput(formValue);
 
-    this.inputService.saveNewInput(this.inputForm.value).subscribe({
+    operation$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.loading.set(false);
-        return this.patchFormWithData(res);
+        this.patchFormWithData(res);
       },
-      error: (err) => {
-        this.loading.set(false);
-        console.error('Error saving input:', err);
-      },
+      error: (error) => this.handleError(error),
     });
   }
 }
