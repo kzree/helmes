@@ -1,31 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { map } from 'rxjs';
-
-export interface SectorWithLevel extends Sector {
-  nestingLevel: number;
-  padding: number;
-}
-
-export interface Entity {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Sector extends Entity {
-  name: string;
-  subSectors: Sector[];
-}
-
-export interface NewInput {
-  name: string;
-  termsAccepted: boolean;
-  sectors: Sector[];
-}
-
-export interface Input extends Entity, NewInput { }
+import { environment } from '../../../environments/environment';
+import { NewInput, Sector, SectorWithLevel, Input } from '../../../types/api';
 
 @Injectable({
   providedIn: 'root',

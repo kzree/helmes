@@ -8,7 +8,8 @@ import {
 } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ComponentsModule } from '../components/components-module';
-import { Input, InputService, SectorWithLevel } from './input-service';
+import { InputService } from './services/input-service';
+import { Input, SectorWithLevel } from '../../types/api';
 
 @Component({
   selector: 'app-input-form',
