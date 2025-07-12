@@ -22,12 +22,13 @@ and are run on application start using Flyway.
 
 ### sector
 
-| Column      | Type      | Constraints           | Description                        |
-| ----------- | --------- | --------------------- | ---------------------------------- |
-| id          | uuid      | PRIMARY KEY, NOT NULL | Unique identifier for the sector   |
-| name        | text      | NOT NULL              | Name of the sector                 |
-| created_at  | timestamp | NOT NULL              | Record creation timestamp          |
-| modified_at | timestamp | NOT NULL              | Record last modification timestamp |
+| Column      | Type      | Constraints                     | Description                                     |
+| ----------- | --------- | ------------------------------- | ----------------------------------------------- |
+| id          | uuid      | PRIMARY KEY, NOT NULL           | Unique identifier for the sector                |
+| name        | text      | NOT NULL                        | Name of the sector                              |
+| created_at  | timestamp | NOT NULL                        | Record creation timestamp                       |
+| modified_at | timestamp | NOT NULL                        | Record last modification timestamp              |
+| parent_id   | uuid      | FOREIGN KEY, ON DELETE SET NULL | References sector.id for hierarchical structure |
 
 ### input
 
@@ -38,6 +39,7 @@ and are run on application start using Flyway.
 | terms_accepted | boolean   | NOT NULL, DEFAULT false | Whether terms have been accepted   |
 | created_at     | timestamp | NOT NULL                | Record creation timestamp          |
 | modified_at    | timestamp | NOT NULL                | Record last modification timestamp |
+| owner          | text      | NULLABLE                | Owner of the input (session id)    |
 
 ### rel_sector\_\_input
 
