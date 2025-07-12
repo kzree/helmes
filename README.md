@@ -2,11 +2,13 @@
 
 Repo for Helmes home assignment.
 
+The application uses the session ID as the "user". The session is valid for an hour.
+
 ## Stack
 
 Frontend:
 
-- Angular
+- Angular v20
 - Node 22+
 
 Backend:
@@ -60,6 +62,13 @@ After the CLI has been installed, you can run the following commands:
 cd ./frontend
 npm i
 ng serve
+```
+
+Frontend tests:
+
+```bash
+cd ./frontend
+ng test
 ```
 
 For setting up backend development:
