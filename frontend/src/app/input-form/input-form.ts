@@ -1,19 +1,14 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Input, InputService, Sector } from './input-service';
-import { CommonModule } from '@angular/common';
-import { ComponentsModule } from '../components/components-module';
 import { TranslocoModule } from '@jsverse/transloco';
-
-interface SectorWithLevel extends Sector {
-  nestingLevel: number;
-  padding: number;
-}
+import { ComponentsModule } from '../components/components-module';
+import { Input, InputService, SectorWithLevel } from './input-service';
 
 @Component({
   selector: 'app-input-form',
@@ -24,11 +19,9 @@ interface SectorWithLevel extends Sector {
     TranslocoModule,
   ],
   templateUrl: './input-form.html',
-  styleUrl: './input-form.css',
+  styles: ``,
 })
 export class InputForm implements OnInit {
-  private readonly PADDING_PER_LEVEL_IN_PX = 16;
-
   private inputService = inject(InputService);
   private formBuilder = inject(FormBuilder);
 
@@ -60,26 +53,10 @@ export class InputForm implements OnInit {
     return selectedSectors.some((selected) => selected.id === sector.id);
   }
 
-  private flattenSectors(sectors: Sector[], level = 0) {
-    const flattened: SectorWithLevel[] = [];
-    sectors.forEach((sector) => {
-      flattened.push({
-        ...sector,
-        nestingLevel: level,
-        padding: level * this.PADDING_PER_LEVEL_IN_PX,
-      });
-      if (sector.subSectors && sector.subSectors.length > 0) {
-        flattened.push(...this.flattenSectors(sector.subSectors, level + 1));
-      }
-    });
-
-    return flattened;
-  }
-
   ngOnInit() {
-    this.inputService.getSectors().subscribe({
+    this.inputService.getSectorOptions().subscribe({
       next: (data) => {
-        this.sectorOptions.set(this.flattenSectors(data));
+        this.sectorOptions.set(data);
         this.loading.set(false);
       },
       error: (error) => {

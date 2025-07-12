@@ -6,8 +6,14 @@ import { TranslocoModule } from '@jsverse/transloco';
 @Component({
   selector: 'app-error-text',
   imports: [CommonModule, TranslocoModule],
-  templateUrl: './error-text.html',
-  styleUrl: './error-text.css',
+  template: `
+    <ng-container *transloco="let t">
+      <span class="text-sm text-red-400" *ngIf="isErrorShown">{{
+        t(errorMessage)
+      }}</span>
+    </ng-container>
+  `,
+  styles: ``,
 })
 export class ErrorText {
   @Input() control: AbstractControl | null = null;
