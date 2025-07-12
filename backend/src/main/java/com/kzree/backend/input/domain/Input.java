@@ -32,6 +32,9 @@ public class Input extends BaseEntity {
     @JoinTable(name = "rel_sector__input", joinColumns = @JoinColumn(name = "input_id"), inverseJoinColumns = @JoinColumn(name = "sector_id"))
     private Set<Sector> sectors = new HashSet<>();
 
+    @Column(name = "owner")
+    private String owner;
+
     public void addSector(Sector sector) {
         sectors.add(sector);
     }

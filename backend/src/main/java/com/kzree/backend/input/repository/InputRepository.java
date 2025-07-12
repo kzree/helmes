@@ -1,5 +1,6 @@
 package com.kzree.backend.input.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +10,5 @@ import com.kzree.backend.input.domain.Input;
 
 @Repository
 public interface InputRepository extends JpaRepository<Input, UUID> {
+    List<Input> findAllByOwner(String ownerId);
 }

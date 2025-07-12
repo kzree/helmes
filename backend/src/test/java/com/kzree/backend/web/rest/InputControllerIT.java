@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,10 +56,16 @@ public class InputControllerIT {
         var input = new Input();
         input.setName(testName);
         input.setTermsAccepted(true);
+
+        var session = new MockHttpSession();
+        var sessionId = session.getId();
+        input.setOwner(sessionId);
+
         inputRepository.saveAndFlush(input);
 
         mockMvc
-                .perform(get(ENTITY_API_URL))
+                .perform(get(ENTITY_API_URL)
+                        .session(session))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").isNotEmpty())
                 .andExpect(jsonPath("$.[0].name").value(testName))

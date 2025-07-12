@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kzree.backend.common.errors.ResourceNotFoundException;
 import com.kzree.backend.input.dto.InputDTO;
 import com.kzree.backend.input.service.InputService;
 
@@ -31,15 +32,15 @@ public class InputController {
     public ResponseEntity<List<InputDTO>> getInputs(HttpServletRequest request) {
         log.info("Request to get all inputs");
         var sessionId = request.getSession().getId();
-        log.debug("Session ID: {}", sessionId);
-        var inputs = inputService.getInputs();
+        var inputs = inputService.getInputs(sessionId);
         return ResponseEntity.ok(inputs);
     }
 
     @PostMapping
-    public ResponseEntity<InputDTO> saveInput(@Valid @RequestBody InputDTO inputDTO) {
+    public ResponseEntity<InputDTO> saveInput(@Valid @RequestBody InputDTO inputDTO, HttpServletRequest request) {
         log.info("Request to save new input");
-        var savedInput = inputService.save(inputDTO);
+        var sessionId = request.getSession().getId();
+        var savedInput = inputService.save(inputDTO, sessionId);
         return ResponseEntity.ok(savedInput);
     }
 
@@ -47,6 +48,10 @@ public class InputController {
     public ResponseEntity<InputDTO> updateInput(@Valid @RequestBody InputDTO inputDTO, @PathVariable UUID id) {
         log.info("Request to update input with ID: {}", id);
         var updatedInput = inputService.update(inputDTO);
-        return ResponseEntity.ok(updatedInput);
+        if (updatedInput.isEmpty()) {
+            throw new ResourceNotFoundException("Input not found with ID: " + id);
+        }
+
+        return ResponseEntity.ok(updatedInput.get());
     }
 }
