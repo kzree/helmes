@@ -57,5 +57,5 @@ jobs:
         run: npm run lint
 
       - name: Run test
-        working-directory: frotnend
+        working-directory: frontend
         run: npm run test:ci
