@@ -36,9 +36,9 @@ public class InputService {
     }
 
     @Transactional
-    public Optional<InputDTO> update(InputDTO inputDTO) {
+    public Optional<InputDTO> update(InputDTO inputDTO, String sessionId) {
         log.info("Updating input with ID: {}", inputDTO.getId());
-        return inputRepository.findById(inputDTO.getId())
+        return inputRepository.findByIdAndOwner(inputDTO.getId(), sessionId)
                 .map(existingInput -> {
                     inputMapper.partialUpdate(existingInput, inputDTO);
                     return existingInput;

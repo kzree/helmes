@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -163,6 +162,9 @@ public class InputControllerIT {
     public void updateExistingInput() throws Exception {
         var testName = "Updated Input";
 
+        var session = new MockHttpSession();
+        var sessionId = session.getId();
+
         var sector = new Sector();
         sector.setName("Test Sector");
         var sectorDTO = sectorMapper.toDto(sectorRepository.saveAndFlush(sector));
@@ -171,6 +173,7 @@ public class InputControllerIT {
         input.setName("Old Input");
         input.setTermsAccepted(true);
         input.setSectors(Set.of(sector));
+        input.setOwner(sessionId);
         input = inputRepository.saveAndFlush(input);
 
         var inputDTO = new InputDTO();
@@ -184,6 +187,7 @@ public class InputControllerIT {
 
         mockMvc
                 .perform(put(ENTITY_API_URL + "/" + input.getId())
+                        .session(session)
                         .contentType("application/json")
                         .content(Serialization.serializeJSONFromObject(inputDTO)))
                 .andExpect(status().isOk())

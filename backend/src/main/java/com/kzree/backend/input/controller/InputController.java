@@ -45,9 +45,11 @@ public class InputController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InputDTO> updateInput(@Valid @RequestBody InputDTO inputDTO, @PathVariable UUID id) {
+    public ResponseEntity<InputDTO> updateInput(@Valid @RequestBody InputDTO inputDTO, @PathVariable UUID id,
+            HttpServletRequest request) {
         log.info("Request to update input with ID: {}", id);
-        var updatedInput = inputService.update(inputDTO);
+        var sessionId = request.getSession().getId();
+        var updatedInput = inputService.update(inputDTO, sessionId);
         if (updatedInput.isEmpty()) {
             throw new ResourceNotFoundException("Input not found with ID: " + id);
         }
