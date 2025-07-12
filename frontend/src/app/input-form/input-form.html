@@ -5,9 +5,9 @@
     class="flex flex-col gap-8 w-[400px] py-8"
   >
     <div class="form-group">
-      <label class="font-semibold required pb-2" for="name">{{
+      <app-label htmlFor="name" [required]="true">{{
         t("form.label.name")
-      }}</label>
+      }}</app-label>
       <input
         type="text"
         id="name"
@@ -19,23 +19,24 @@
     </div>
 
     <div class="form-group">
-      <label class="font-semibold required pb-2">
+      <app-label htmlFor="termsAccepted" [required]="true">
         <input
           type="checkbox"
           id="termsAccepted"
           formControlName="termsAccepted"
         />
         {{ t("form.label.terms") }}
-      </label>
+      </app-label>
       <app-error-text
         [control]="termsAccepted"
         fieldName="termsAccepted"
       ></app-error-text>
     </div>
+
     <div class="form-group">
-      <label class="font-semibold required pb-2" for="sectors">{{
+      <app-label htmlFor="sectors" [required]="true">{{
         t("form.label.sectors")
-      }}</label>
+      }}</app-label>
       <select multiple size="10" id="sectors" formControlName="sectors">
         <option
           *ngFor="let sector of sectorOptions()"
