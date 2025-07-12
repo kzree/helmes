@@ -59,14 +59,20 @@ export class InputService {
   }
 
   getInputs() {
-    return this.http.get<Input[]>(`${this.apiUrl}/inputs`);
+    return this.http.get<Input[]>(`${this.apiUrl}/inputs`, {
+      withCredentials: true,
+    });
   }
 
   saveNewInput(input: NewInput) {
-    return this.http.post<Input>(`${this.apiUrl}/inputs`, input);
+    return this.http.post<Input>(`${this.apiUrl}/inputs`, input, {
+      withCredentials: true,
+    });
   }
 
   updateInput(input: Input) {
-    return this.http.put<Input>(`${this.apiUrl}/inputs/${input.id}`, input);
+    return this.http.put<Input>(`${this.apiUrl}/inputs/${input.id}`, input, {
+      withCredentials: true,
+    });
   }
 }

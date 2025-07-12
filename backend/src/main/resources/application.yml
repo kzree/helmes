@@ -1,5 +1,13 @@
 server:
   port: 4000
+  servlet:
+    session:
+      timeout: 3600s
+      cookie:
+        max-age: 3600
+        http-only: true
+        secure: false
+        same-site: lax
 
 logging:
   level:

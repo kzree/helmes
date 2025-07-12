@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kzree.backend.input.dto.InputDTO;
 import com.kzree.backend.input.service.InputService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,10 @@ public class InputController {
     private final InputService inputService;
 
     @GetMapping
-    public ResponseEntity<List<InputDTO>> getInputs() {
+    public ResponseEntity<List<InputDTO>> getInputs(HttpServletRequest request) {
         log.info("Request to get all inputs");
+        var sessionId = request.getSession().getId();
+        log.debug("Session ID: {}", sessionId);
         var inputs = inputService.getInputs();
         return ResponseEntity.ok(inputs);
     }
