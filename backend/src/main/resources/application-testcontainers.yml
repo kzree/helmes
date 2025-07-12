@@ -1,9 +1,3 @@
-logging:
-  level:
-    ROOT: INFO
-    org.hibernate.SQL: DEBUG
-    com.kzree.backend: DEBUG
-
 spring:
   datasource:
     url: jdbc:tc:postgresql:latest///my-db
