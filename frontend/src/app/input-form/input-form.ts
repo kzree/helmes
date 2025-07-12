@@ -101,12 +101,17 @@ export class InputForm implements OnInit {
       return;
     }
 
+    this.loading.set(true);
     const isExistingInput = !!this.inputForm.value.id;
 
     if (isExistingInput) {
       this.inputService.updateInput(this.inputForm.value).subscribe({
-        next: (res) => this.patchFormWithData(res),
+        next: (res) => {
+          this.loading.set(false);
+          return this.patchFormWithData(res);
+        },
         error: (err) => {
+          this.loading.set(false);
           console.error('Error updating input:', err);
         },
       });
@@ -114,8 +119,12 @@ export class InputForm implements OnInit {
     }
 
     this.inputService.saveNewInput(this.inputForm.value).subscribe({
-      next: (res) => this.patchFormWithData(res),
+      next: (res) => {
+        this.loading.set(false);
+        return this.patchFormWithData(res);
+      },
       error: (err) => {
+        this.loading.set(false);
         console.error('Error saving input:', err);
       },
     });

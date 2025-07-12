@@ -5,10 +5,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-label',
   imports: [NgClass],
   template: `
-    <label
-      [ngClass]="{ 'font-semibold pb-2': true, required: required }"
-      [for]="htmlFor"
-    >
+    <label [ngClass]="{ 'font-semibold': true, required }" [for]="htmlFor">
       <ng-content></ng-content>
     </label>
   `,

@@ -1,48 +1,31 @@
 <ng-container *transloco="let t">
-  <form
-    [formGroup]="inputForm"
-    (ngSubmit)="onSubmit()"
-    class="flex flex-col gap-8 w-[400px] py-8"
-  >
+  <div class="grid place-items-center py-12" *ngIf="loading()">
+    <app-loader></app-loader>
+  </div>
+
+  <form *ngIf="!loading()" [formGroup]="inputForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8 w-[400px] py-8">
     <div class="form-group">
       <app-label htmlFor="name" [required]="true">{{
         t("form.label.name")
-      }}</app-label>
-      <input
-        type="text"
-        id="name"
-        formControlName="name"
-        class="form-control"
-        required
-      />
+        }}</app-label>
+      <input type="text" id="name" formControlName="name" class="form-control" required />
       <app-error-text [control]="name" fieldName="name"></app-error-text>
     </div>
 
     <div class="form-group">
       <app-label htmlFor="termsAccepted" [required]="true">
-        <input
-          type="checkbox"
-          id="termsAccepted"
-          formControlName="termsAccepted"
-        />
+        <input type="checkbox" id="termsAccepted" formControlName="termsAccepted" />
         {{ t("form.label.terms") }}
       </app-label>
-      <app-error-text
-        [control]="termsAccepted"
-        fieldName="termsAccepted"
-      ></app-error-text>
+      <app-error-text [control]="termsAccepted" fieldName="termsAccepted"></app-error-text>
     </div>
 
     <div class="form-group">
       <app-label htmlFor="sectors" [required]="true">{{
         t("form.label.sectors")
-      }}</app-label>
+        }}</app-label>
       <select multiple size="10" id="sectors" formControlName="sectors">
-        <option
-          *ngFor="let sector of sectorOptions()"
-          [value]="sector"
-          [style.padding-left.px]="sector.padding"
-        >
+        <option *ngFor="let sector of sectorOptions()" [value]="sector" [style.padding-left.px]="sector.padding">
           {{ sector.name }}
           <span class="font-bold" *ngIf="isSectorSelected(sector)"> ✕</span>
         </option>
